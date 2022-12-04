@@ -5,12 +5,15 @@ import {
   Get,
   Param,
   Patch,
-  Post
+  Post,
 } from '@nestjs/common';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
 
+@Serialize(UserDto)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -36,13 +39,12 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id) {
+  remove(@Param('id') id: number) {
     return this.usersService.delete(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id, @Body() updateUserDto: UpdateUserDto) {
-    console.log('updateUserDto', updateUserDto);
+  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 }
