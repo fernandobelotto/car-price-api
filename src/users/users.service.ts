@@ -26,6 +26,10 @@ export class UsersService {
     return this.repo.delete(id);
   }
 
+  findByEmail(email: string) {
+    return this.repo.findOne({ where: { email } });
+  }
+
   async update(id: number, attrs: Partial<UserEntity>) {
     const user = await this.findOne(id);
 
