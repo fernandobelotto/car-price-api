@@ -9,15 +9,17 @@ import {
   Post,
   Session,
 } from '@nestjs/common';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { AuthService } from './auth/auth.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
+import { UserEntity } from './users.entity';
 import { UsersService } from './users.service';
 
-@Serialize(UserDto)
 @Controller('users')
+@Serialize(UserDto)
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -26,11 +28,11 @@ export class UsersController {
   ) {}
 
   @Get('me')
-  async getMe(@Session() session: any) {
-    if (!session.userId) {
-      throw new BadRequestException('No user found');
+  async getMe(@CurrentUser() user: UserEntity) {
+    if (!user) {
+      throw new BadRequestException('Not authenticated');
     }
-    return this.usersService.findOne(session.userId);
+    return user;
   }
 
   @Post('signout')
