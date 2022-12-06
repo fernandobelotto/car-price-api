@@ -11,7 +11,6 @@ import { UsersModule } from './users/users.module';
   imports: [
     ReportsModule,
     UsersModule,
-
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',
